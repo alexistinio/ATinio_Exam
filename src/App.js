@@ -16,12 +16,19 @@ const [emails, setEmails] = useState([])
 useEffect(() => {
   const storedEmails = JSON.parse(localStorage.getItem(local_key))
   if (storedEmails) setEmails(storedEmails)
-  let x = sessionStorage.getItem("startKey")
-  let y = sessionStorage.getItem("endKey")
+  let storedStart = sessionStorage.getItem("startKey")
+  let storedEnd = sessionStorage.getItem("endKey")
+  let storedPrevStart = sessionStorage.getItem("startPrevKey")
+  let storedPrevEnd = sessionStorage.getItem("endPrevKey")
+  
 
-  if (x) setPageStart(x)
-  if (y) setPageEnd(y)
+  if (storedStart) setPageStart(storedStart)
+  if (storedEnd) setPageEnd(storedEnd)
+  if (storedPrevStart) setPageStart(storedPrevStart)
+  if (storedPrevEnd) setPageEnd(storedPrevEnd)
 }, [])
+
+
 
   function nextPage() {
     const start = parseInt(pageStart) + 10
@@ -30,6 +37,9 @@ useEffect(() => {
     if(pageStart<90){
       sessionStorage.setItem("startKey",start)
       sessionStorage.setItem("endKey",end)
+      sessionStorage.removeItem("startPrevKey")
+      sessionStorage.removeItem("endPrevKey")
+
       setPageStart(start)
       setPageEnd(end)
     }
@@ -43,6 +53,11 @@ useEffect(() => {
     const end = parseInt(pageEnd) - 10
     
     if(pageStart>0){
+      sessionStorage.setItem("startPrevKey",start)
+      sessionStorage.setItem("endPrevKey",end)
+      sessionStorage.removeItem("startKey")
+      sessionStorage.removeItem("endKey")
+     
       setPageStart(start)
       setPageEnd(end)
     }
