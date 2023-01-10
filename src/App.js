@@ -7,18 +7,47 @@ import Objects from './Objects'
 const local_key = 'local_key.emails'
 function App() {
 
-  const [all, setAll] = useState(false);
-  const [emails, setEmails] = useState([])
+const [all, setAll] = useState(false)
+const [pageStart, setPageStart] = useState([0])
+const [pageEnd, setPageEnd] = useState([10])
+const [emails, setEmails] = useState([])
+
 
 useEffect(() => {
   const storedEmails = JSON.parse(localStorage.getItem(local_key))
   if (storedEmails) setEmails(storedEmails)
 }, [])
 
+  function nextPage() {
+    const start = parseInt(pageStart) + 10
+    const end = parseInt(pageEnd) + 10
+
+    if(pageStart<90){
+      setPageStart(start)
+      setPageEnd(end)
+    }
+    else{
+      //
+    }
+  }
+
+  function prevPage() {
+    const start = parseInt(pageStart) - 10
+    const end = parseInt(pageEnd) - 10
+    
+    if(pageStart>0){
+      setPageStart(start)
+      setPageEnd(end)
+    }
+    else{
+      //
+    }      
+  }
+
   function clearEmails() {
-    const deleteEmails = emails.filter(email => !email.complete)
-    setEmails(deleteEmails)
-    localStorage.setItem(local_key, JSON.stringify(deleteEmails))
+    const filterEmails = emails.filter(email => !email.complete)
+    setEmails(filterEmails)
+    localStorage.setItem(local_key, JSON.stringify(filterEmails))
   }
 
 
@@ -26,8 +55,6 @@ useEffect(() => {
     const toggleEmails = [...emails]
     setAll(all => !all)
     toggleEmails.map((l) => {
-
-  
       return l.complete = !all
     })
     } 
@@ -46,10 +73,16 @@ useEffect(() => {
       <Nav 
       selectAll={selectAll} 
       all={all}
-      clearEmails={clearEmails}/>
+      clearEmails={clearEmails}
+      pageStart={pageStart}
+      pageEnd={pageEnd}
+      nextPage={nextPage}
+      prevPage={prevPage}
+      />
       
     <div className='ms-4 mt-4 fw-bolder text-muted'>Unread</div>
-     {emails.map((email) => {
+ 
+     {emails.slice(pageStart,pageEnd).reverse().map((email) => {
         return (
           <Emails 
           emails={email}
