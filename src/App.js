@@ -16,6 +16,11 @@ const [emails, setEmails] = useState([])
 useEffect(() => {
   const storedEmails = JSON.parse(localStorage.getItem(local_key))
   if (storedEmails) setEmails(storedEmails)
+  let x = sessionStorage.getItem("startKey")
+  let y = sessionStorage.getItem("endKey")
+
+  if (x) setPageStart(x)
+  if (y) setPageEnd(y)
 }, [])
 
   function nextPage() {
@@ -23,6 +28,8 @@ useEffect(() => {
     const end = parseInt(pageEnd) + 10
 
     if(pageStart<90){
+      sessionStorage.setItem("startKey",start)
+      sessionStorage.setItem("endKey",end)
       setPageStart(start)
       setPageEnd(end)
     }
